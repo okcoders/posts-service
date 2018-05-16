@@ -23,6 +23,15 @@ function newPost(req, res, next) {
   })
 }
 
+function deletePost(req, res, next) {
+  db.Post
+    .destroy({ where: {postId: req.params.id}})
+    .then(() => {
+      res.send("success")
+      next()
+    })
+}
+
 const server = restify.createServer();
 const cors = corsMiddleware({
   preflightMaxAge: 5, //Optional
@@ -36,7 +45,7 @@ server.use(restify.plugins.bodyParser())
 server.get('/posts', posts);
 server.post('/posts', newPost);
 // server.get('/post/:id', postById);
-// server.delete('/post/:id', deletepostById);
+server.del('/posts/:id', deletePost);
 
 server.listen(8080, function() {
   console.log('%s listening at %s', server.name, server.url);
